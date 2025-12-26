@@ -3,6 +3,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define FPS 60
+#define FRAME_TIME 1000 / FPS
 
 struct Vec2
 {
@@ -81,6 +82,8 @@ void loop(SDL_Renderer *r)
 
   while (!quit)
   {
+    Uint64 frame_start = SDL_GetTicks();
+
     while (SDL_PollEvent(&event))
     {
       if (event.type == SDL_EVENT_QUIT)
@@ -96,12 +99,17 @@ void loop(SDL_Renderer *r)
 
     for (int i = 0; i < vs_len; i++)
     {
-      drawPoint(r, convertToScreenCoordinates(projectToScreen(
-        translate_z(vs[i], 1 + dz)
-      )));
+      drawPoint(r, convertToScreenCoordinates(
+                       projectToScreen(translate_z(vs[i], 1 + dz))));
     }
 
     SDL_RenderPresent(r);
+
+    Uint64 frame_time = SDL_GetTicks() - frame_start;
+    if (frame_time < FRAME_TIME)
+    {
+      SDL_Delay(FRAME_TIME - frame_time);
+    }
   }
 }
 
@@ -135,8 +143,8 @@ struct Vec2 projectToScreen(struct Vec3 point)
 struct Vec3 translate_z(struct Vec3 point, float dz)
 {
   return (struct Vec3){
-    .x = point.x,
-    .y = point.y,
-    .z = point.z + dz,
+      .x = point.x,
+      .y = point.y,
+      .z = point.z + dz,
   };
 }
