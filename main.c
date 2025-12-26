@@ -3,6 +3,7 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
+#define ASPECT_RATIO WINDOW_WIDTH / WINDOW_HEIGHT
 #define FPS 60
 #define FRAME_TIME 1000 / FPS
 
@@ -86,12 +87,7 @@ void loop(SDL_Renderer *r)
   };
   size_t vs_len = sizeof(vs) / sizeof(*vs);
 
-  int fs[][4] = {
-    {0, 1, 2, 3},
-    {4, 5, 6, 7},
-    {0, 4, 5, 1},
-    {2, 6, 7, 3}
-  };
+  int fs[][4] = {{0, 1, 2, 3}, {4, 5, 6, 7}, {0, 4, 5, 1}, {2, 6, 7, 3}};
   size_t fs_len = sizeof(fs) / sizeof(*fs);
 
   while (!quit)
@@ -107,7 +103,7 @@ void loop(SDL_Renderer *r)
     }
 
     // dz += 1 * dt;
-    angle += M_PI * dt;
+    angle += M_PI_2 * dt;
 
     SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
@@ -164,7 +160,7 @@ Vec2 convertToScreenCoordinates(Vec2 point)
 
   return (Vec2){
       .x = (point.x + 1) / 2 * WINDOW_WIDTH,
-      .y = (1 - (point.y + 1) / 2) * WINDOW_HEIGHT,
+      .y = (1 - (point.y * ASPECT_RATIO + 1) / 2) * WINDOW_HEIGHT,
   };
 }
 
