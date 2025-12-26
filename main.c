@@ -2,6 +2,7 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
+#define FPS 60
 
 struct Vec2
 {
@@ -61,6 +62,9 @@ int main()
 
 void loop(SDL_Renderer *r)
 {
+  float dt = 1. / FPS;
+  float dz = 0;
+
   bool quit = false;
   SDL_Event event;
 
@@ -74,14 +78,19 @@ void loop(SDL_Renderer *r)
       }
     }
 
+    dz += 1 * dt;
+
     SDL_SetRenderDrawColor(r, 24, 24, 24, 255);
     SDL_RenderClear(r);
 
     drawPoint(r, convertToScreenCoordinates(
-                     projectToScreen((struct Vec3){0.5, 0, 2})));
-
+                     projectToScreen((struct Vec3){0.5, 0.5, 1 + dz})));
     drawPoint(r, convertToScreenCoordinates(
-                     projectToScreen((struct Vec3){0.5, 0, 10})));
+                     projectToScreen((struct Vec3){-0.5, 0.5, 1 + dz})));
+    drawPoint(r, convertToScreenCoordinates(
+                     projectToScreen((struct Vec3){-0.5, -0.5, 1 + dz})));
+    drawPoint(r, convertToScreenCoordinates(
+                     projectToScreen((struct Vec3){0.5, -0.5, 1 + dz})));
 
     SDL_RenderPresent(r);
   }
